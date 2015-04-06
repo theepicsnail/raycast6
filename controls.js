@@ -1,7 +1,17 @@
+const controlMap = {
+  37: 'turnleft',   // LEFT
+  38: 'forward',    // UP
+  39: 'turnright',  // RIGHT
+  40: 'backward',   // DOWN
+  65: 'stepleft',   // A
+  68: 'stepright',  // D
+  83: 'backward',   // S
+  87: 'forward',    // W
+}
+
 export class Controls {
   constructor() {
-    this.codes  = { 37: 'left', 39: 'right', 38: 'forward', 40: 'backward' };
-    this.states = { 'left': false, 'right': false, 'forward': false, 'backward': false };
+    this.states = {} // everythnig defaults to undefined (falsey)
     document.addEventListener('keydown', this.onKey.bind(this, true), false);
     document.addEventListener('keyup', this.onKey.bind(this, false), false);
     document.addEventListener('touchstart', this.onTouch.bind(this), false);
@@ -18,15 +28,21 @@ export class Controls {
   };
 
   onTouchEnd(e) {
-    this.states = { 'left': false, 'right': false, 'forward': false, 'backward': false };
+    this.states.left = false;
+    this.states.right = false;
+    this.states.up = false;
+    this.states.down = false;
     e.preventDefault();
     e.stopPropagation();
   };
 
   onKey(val, e) {
-    var state = this.codes[e.keyCode];
-    if (typeof state === 'undefined') return;
-    this.states[state] = val;
+
+    var control = controlMap[e.keyCode];
+    if(control === undefined)
+      return
+
+    this.states[control] = val;
     e.preventDefault && e.preventDefault();
     e.stopPropagation && e.stopPropagation();
   };
